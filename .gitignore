@@ -3,7 +3,7 @@
 # Edit at https://www.gitignore.io/?templates=windows,dotnetcore,visualstudio,visualstudiocode
 guides.txt
 createDB.js
-
+/Noteloves_server/Migrations/*
 
 
 ### DotnetCore ###
