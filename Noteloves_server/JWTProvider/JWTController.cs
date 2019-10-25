@@ -43,9 +43,9 @@ namespace Noteloves_server.JWTProvider
                 return BadRequest(ModelState);
             }
 
-            if (!_jWTService.CheckAccount(login))
+            if (!_jWTService.CheckAccount(new LoginForm(login.email, _userService.EncodePassword(login.password))))
             {
-                return NotFound(new Response("404", "Not found!"));
+                return NotFound(new Response("404", "Email or password is not correct!"));
             }
 
             var AccessToken = _jWTService.GenerateToken(login.email);
