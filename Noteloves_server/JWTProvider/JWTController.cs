@@ -36,7 +36,7 @@ namespace Noteloves_server.JWTProvider
         [AllowAnonymous]
         [HttpPost]
         [Route("/auth/token")]
-        public IActionResult Authenticate([FromBody] LoginRequest login)
+        public IActionResult Authenticate([FromBody] LoginForm login)
         {
             if (!ModelState.IsValid)
             {
@@ -45,7 +45,7 @@ namespace Noteloves_server.JWTProvider
 
             if (!_jWTService.CheckAccount(login))
             {
-                return NotFound(new ErrorResponse("404", "Not found!"));
+                return NotFound(new Response("404", "Not found!"));
             }
 
             var AccessToken = _jWTService.GenerateToken(login.email);
@@ -65,7 +65,7 @@ namespace Noteloves_server.JWTProvider
             var email = principal.Identity.Name;
             var savedRefreshToken = _userService.GetRefreshToken(email); //retrieve the refresh token from a data store
             if (savedRefreshToken != refreshTokenRequest.RefreshToken)
-                return BadRequest(new ErrorResponse("400", "Invalid refresh token"));
+                return BadRequest(new Response("400", "Invalid refresh token"));
 
             var newAccessToken = _jWTService.GenerateToken(email);
             var newRefreshToken = _jWTService.GenerateRefreshToken();

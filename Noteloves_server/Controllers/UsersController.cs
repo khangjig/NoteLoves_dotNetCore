@@ -10,6 +10,9 @@ using Noteloves_server.Models;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Authorization;
+using Noteloves_server.Messages.Requests;
+using Noteloves_server.Services;
+using Noteloves_server.Messages.Responses;
 
 namespace Noteloves_server.Controllers
 {
@@ -19,123 +22,122 @@ namespace Noteloves_server.Controllers
     public class UsersController : ControllerBase
     {
         private readonly DatabaseContext _context;
+        private IUserService _userService;
 
-        public UsersController(DatabaseContext context)
+        public UsersController(DatabaseContext context, IUserService userService)
         {
             _context = context;
+            _userService = userService;
         }
         
         // GET: api/Users
         [HttpGet]
-        public IEnumerable<User> Getusers()
+        public IActionResult Getusers()
         {
-            return _context.users;
+            return Ok(new DataResponse("200", _userService.GetAllUser(), "Successfully!"));
         }
 
         // GET: api/Users/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetUser([FromRoute] int id)
+        public IActionResult GetUserById([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var user = await _context.users.FindAsync(id);
+            var user = _userService.GetInfomation(id);
 
             if (user == null)
             {
-                return NotFound();
+                return NotFound(new Response("404", "User not found!"));
             }
 
-            return Ok(user);
+            user.RefreshToken = null;
+            user.Password = null;
+
+            return Ok(new DataResponse("200", user, "Successfully!"));
         }
 
-        // PUT: api/Users/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser([FromRoute] int id, [FromBody] User user)
+        // PUT: api/Users/EditInfo
+        [HttpPut("{EditInfo}")]
+        public async Task<IActionResult> EditInformationUser([FromBody] EditUserForm editUserForm)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != user.Id)
+            if (!UserExistsById(editUserForm.Id))
             {
-                return BadRequest();
+                return NotFound(new Response("404", "User not found!"));
             }
 
-            _context.Entry(user).State = EntityState.Modified;
+            _userService.EidtInfomation(editUserForm);
+            await _context.SaveChangesAsync();
 
-            try
+            return Ok(new Response("200", "Successfully!"));
+        }
+
+        // PUT: api/Users/ChangePassword
+        [HttpPatch("{ChangePassword}")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordForm changePasswordForm)
+        {
+            if (!ModelState.IsValid)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return BadRequest(ModelState);
             }
 
-            return NoContent();
+            if (!UserExistsById(changePasswordForm.Id))
+            {
+                return NotFound(new Response("404", "User not found!"));
+            }
+
+            if (!CheckOldPassword(changePasswordForm.Id, changePasswordForm.OldPassword))
+            {
+                return BadRequest(new Response("400", "Old password not correct!"));
+            }
+
+            _userService.ChangePassword(changePasswordForm.Id, changePasswordForm.NewPassword);
+            await _context.SaveChangesAsync();
+
+            return Ok(new Response("200", "Successfully!"));
         }
 
         // POST: api/Users
+        [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> PostUser([FromBody] User user)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            byte[] salt = new byte[128 / 8];
-            using (var rng = RandomNumberGenerator.Create())
-            {
-                rng.GetBytes(salt);
-            }
-            user.Password = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                            password: user.Password,
-                            salt: salt,
-                            prf: KeyDerivationPrf.HMACSHA1,
-                            iterationCount: 10000,
-                            numBytesRequested: 256 / 8));
-
-            _context.users.Add(user);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetUser", new { id = user.Id }, user);
-        }
-
-        // DELETE: api/Users/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser([FromRoute] int id)
+        public async Task<IActionResult> AddUser([FromBody] AddUserForm addUserForm)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var user = await _context.users.FindAsync(id);
-            if (user == null)
+            if (UserExistsByEmail(addUserForm.Email))
             {
-                return NotFound();
+                return BadRequest(new Response("400","Email is not invalid"));
             }
 
-            _context.users.Remove(user);
+            _userService.AddUser(addUserForm);
             await _context.SaveChangesAsync();
 
-            return Ok(user);
+            return Ok(new Response("200", "Successfully added!"));
+        }
+        
+        private bool UserExistsByEmail(string email)
+        {
+            return _context.users.Any(e => e.Email == email);
         }
 
-        private bool UserExists(int id)
+        private bool UserExistsById(int id)
         {
             return _context.users.Any(e => e.Id == id);
+        }
+
+        private bool CheckOldPassword(int id, string oldPassword)
+        {
+            return _context.users.Any(e => e.Id == id && e.Password == _userService.EncodePassword(oldPassword));
         }
     }
 }

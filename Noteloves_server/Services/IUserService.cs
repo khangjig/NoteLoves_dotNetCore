@@ -10,8 +10,14 @@ namespace Noteloves_server.Services
 {
     public interface IUserService
     {
+        void AddUser(AddUserForm addUserForm);
+        IEnumerable<User> GetAllUser();
+        void ChangePassword(int id, string newPassword);
+        void EidtInfomation(EditUserForm editUserForm);
+        User GetInfomation(int id);
         void UpdateRefreshToken(int id, string refreshToken);
         int GetIdByEmail(string email);
         string GetRefreshToken(string email);
+        string EncodePassword(string password);
     }
 }

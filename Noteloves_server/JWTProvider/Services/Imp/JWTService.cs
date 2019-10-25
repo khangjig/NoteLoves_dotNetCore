@@ -25,7 +25,7 @@ namespace Noteloves_server.JWTProvider.Services
             _context = context;
         }
 
-        public bool CheckAccount(LoginRequest loginRequest)
+        public bool CheckAccount(LoginForm loginRequest)
         {
             var user = _context.users
                 .Where(u => u.Email == loginRequest.email && u.Password == loginRequest.password);

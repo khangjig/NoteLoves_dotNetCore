@@ -11,7 +11,7 @@ namespace Noteloves_server.JWTProvider.Services
     {
         string GenerateToken(string email);
         string GenerateRefreshToken();
-        bool CheckAccount(LoginRequest loginRequest);
+        bool CheckAccount(LoginForm loginRequest);
         ClaimsPrincipal GetPrincipalFromExpiredToken(string token);
     }
 }
