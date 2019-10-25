@@ -36,8 +36,8 @@ namespace Noteloves_server.Models
 
         [Timestamp]
         public DateTime CreatedAt { get; set; }
-
-        [Timestamp]
         public DateTime UpdateAt { get; set; }
+        
+        public virtual Avatar Avatar{ get; set; }
     }
 }

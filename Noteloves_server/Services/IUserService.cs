@@ -19,5 +19,8 @@ namespace Noteloves_server.Services
         int GetIdByEmail(string email);
         string GetRefreshToken(string email);
         string EncodePassword(string password);
+        bool CheckOldPassword(int id, string oldPassword);
+        bool UserExistsById(int id);
+        bool UserExistsByEmail(string email);
     }
 }

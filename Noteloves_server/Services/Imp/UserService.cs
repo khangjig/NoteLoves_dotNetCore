@@ -49,6 +49,7 @@ namespace Noteloves_server.Services
             user.Name = editUserForm.Name;
             user.Sex = editUserForm.Sex;
             user.Birthday = editUserForm.BirthDay;
+            user.UpdateAt = DateTime.Now;
 
             _context.SaveChanges();
         }
@@ -58,6 +59,7 @@ namespace Noteloves_server.Services
             var user = _context.users.First(a => a.Id == id);
 
             user.Password = EncodePassword(newPassword);
+            user.UpdateAt = DateTime.Now;
         }
 
         public void UpdateRefreshToken(int id, string refreshToken)
@@ -91,6 +93,21 @@ namespace Noteloves_server.Services
                             numBytesRequested: 256 / 8));
 
             return generated;
+        }
+
+        public bool UserExistsByEmail(string email)
+        {
+            return _context.users.Any(e => e.Email == email);
+        }
+
+        public bool UserExistsById(int id)
+        {
+            return _context.users.Any(e => e.Id == id);
+        }
+
+        public bool CheckOldPassword(int id, string oldPassword)
+        {
+            return _context.users.Any(e => e.Id == id && e.Password == EncodePassword(oldPassword));
         }
     }
 }

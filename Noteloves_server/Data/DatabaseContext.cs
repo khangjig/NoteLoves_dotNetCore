@@ -14,6 +14,7 @@ namespace Noteloves_server.Data
         }
 
         public DbSet<User> users { get; set; }
+        public DbSet<Avatar> avatars { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>()
@@ -22,13 +23,19 @@ namespace Noteloves_server.Data
 
             modelBuilder.Entity<User>()
                 .Property(user => user.CreatedAt)
-                .HasDefaultValue(DateTime.Now)
-                .ValueGeneratedOnAdd();
+                .HasDefaultValueSql("getdate()");
 
             modelBuilder.Entity<User>()
                 .Property(user => user.UpdateAt)
-                .HasDefaultValue(DateTime.Now)
-                .ValueGeneratedOnAddOrUpdate();
+                .HasDefaultValueSql("getdate()");
+
+            modelBuilder.Entity<Avatar>()
+                .Property(avatars => avatars.CreatedAt)
+                .HasDefaultValueSql("getdate()");
+
+            modelBuilder.Entity<Avatar>()
+                .Property(avatars => avatars.UpdateAt)
+                .HasDefaultValueSql("getdate()");
         }
     }
 }

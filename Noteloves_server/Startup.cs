@@ -18,6 +18,7 @@ using Noteloves_server.Data;
 using Noteloves_server.Helpers;
 using Noteloves_server.JWTProvider.Services;
 using Noteloves_server.Services;
+using Noteloves_server.Services.Imp;
 
 namespace Noteloves_server
 {
@@ -65,7 +66,7 @@ namespace Noteloves_server
             // configure DI for application services
             services.AddScoped<IJWTService, JWTService>();
             services.AddScoped<IUserService, UserService>();
-
+            services.AddScoped<IAvatarService, AvatarService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

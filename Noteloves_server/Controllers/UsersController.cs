@@ -68,7 +68,7 @@ namespace Noteloves_server.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (!UserExistsById(editUserForm.Id))
+            if (!_userService.UserExistsById(editUserForm.Id))
             {
                 return NotFound(new Response("404", "User not found!"));
             }
@@ -88,12 +88,12 @@ namespace Noteloves_server.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (!UserExistsById(changePasswordForm.Id))
+            if (!_userService.UserExistsById(changePasswordForm.Id))
             {
                 return NotFound(new Response("404", "User not found!"));
             }
 
-            if (!CheckOldPassword(changePasswordForm.Id, changePasswordForm.OldPassword))
+            if (!_userService.CheckOldPassword(changePasswordForm.Id, changePasswordForm.OldPassword))
             {
                 return BadRequest(new Response("400", "Old password not correct!"));
             }
@@ -114,7 +114,7 @@ namespace Noteloves_server.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (UserExistsByEmail(addUserForm.Email))
+            if (_userService.UserExistsByEmail(addUserForm.Email))
             {
                 return BadRequest(new Response("400","Email is not invalid"));
             }
@@ -123,21 +123,6 @@ namespace Noteloves_server.Controllers
             await _context.SaveChangesAsync();
 
             return Ok(new Response("200", "Successfully added!"));
-        }
-        
-        private bool UserExistsByEmail(string email)
-        {
-            return _context.users.Any(e => e.Email == email);
-        }
-
-        private bool UserExistsById(int id)
-        {
-            return _context.users.Any(e => e.Id == id);
-        }
-
-        private bool CheckOldPassword(int id, string oldPassword)
-        {
-            return _context.users.Any(e => e.Id == id && e.Password == _userService.EncodePassword(oldPassword));
         }
     }
 }
