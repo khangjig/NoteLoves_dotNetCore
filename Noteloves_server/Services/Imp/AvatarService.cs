@@ -1,7 +1,9 @@
-﻿using Noteloves_server.Data;
+﻿using Microsoft.AspNetCore.Http;
+using Noteloves_server.Data;
 using Noteloves_server.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -25,16 +27,16 @@ namespace Noteloves_server.Services.Imp
             _context.avatars.Add(avatar);
         }
 
-        public void UpdateAvatar(int userId, byte[] image)
+        public void UpdateAvatar(int userId, IFormFile image)
         {
             if (!_context.avatars.Any(e => e.UserId == userId))
             {
-                CreateAvatar(userId, image);
+                CreateAvatar(userId, EncodeImage(image));
             }
             else
             {
                 var avatar = _context.avatars.First(a => a.UserId == userId);
-                avatar.Image = image;
+                avatar.Image = EncodeImage(image);
                 avatar.UpdateAt = DateTime.Now;
                 _context.SaveChanges();
             }
@@ -45,9 +47,22 @@ namespace Noteloves_server.Services.Imp
             var avatar = _context.avatars.First(a => a.UserId == userId);
             return avatar.Image;
         }
+
         public bool AvatarExistsByUserId(int UserId)
         {
             return _context.avatars.Any(e => e.UserId == UserId);
+        }
+
+        public byte[] EncodeImage(IFormFile image)
+        {
+            byte[] fileBytes;
+            using (var ms = new MemoryStream())
+            {
+                image.CopyTo(ms);
+                fileBytes = ms.ToArray();
+            }
+
+            return fileBytes;
         }
     }
 }

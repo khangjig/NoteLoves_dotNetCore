@@ -20,6 +20,9 @@ namespace Noteloves_server.Models
         [Required(ErrorMessage = "Anniversary not null")]
         public DateTime Anniversary { get; set; }
 
+        [Required]
+        public bool Hidden { get; set; }
+
         [Timestamp]
         public DateTime CreatedAt { get; set; }
 

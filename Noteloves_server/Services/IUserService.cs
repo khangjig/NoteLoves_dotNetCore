@@ -22,5 +22,6 @@ namespace Noteloves_server.Services
         bool CheckOldPassword(int id, string oldPassword);
         bool UserExistsById(int id);
         bool UserExistsByEmail(string email);
+        void UpdateSyncCode(int id);
     }
 }

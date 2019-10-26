@@ -65,7 +65,7 @@ namespace Noteloves_server.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest();
             }
 
             if (!_userService.UserExistsById(editUserForm.Id))
@@ -116,10 +116,13 @@ namespace Noteloves_server.Controllers
 
             if (_userService.UserExistsByEmail(addUserForm.Email))
             {
-                return BadRequest(new Response("400","Email is not invalid"));
+                return BadRequest(new Response("400", "Email already exists"));
             }
 
             _userService.AddUser(addUserForm);
+            await _context.SaveChangesAsync();
+
+            _userService.UpdateSyncCode(_userService.GetIdByEmail(addUserForm.Email));
             await _context.SaveChangesAsync();
 
             return Ok(new Response("200", "Successfully added!"));

@@ -19,6 +19,7 @@ namespace Noteloves_server.Data
         public DbSet<NoteImage> note_images{ get; set; }
         public DbSet<DateInfo> date_info { get; set; }
         public DbSet<Notification> notifications { get; set; }
+        public DbSet<Partner> partner { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -49,6 +50,10 @@ namespace Noteloves_server.Data
             modelBuilder.Entity<Note>()
                 .Property(notes => notes.UpdateAt)
                 .HasDefaultValueSql("getdate()");
+
+            modelBuilder.Entity<Note>()
+                .Property(notes => notes.Hidden)
+                .HasDefaultValue(false);
 
             modelBuilder.Entity<NoteImage>()
                 .Property(noteimages => noteimages.CreatedAt)

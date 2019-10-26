@@ -50,5 +50,7 @@ namespace Noteloves_server.Models
         public List<Note> Notes { get; set; }
 
         public List<Notification> Notifications { get; set; }
+
+        public virtual Partner Partner { get; set; }
     }
 }

@@ -33,6 +33,7 @@ namespace Noteloves_server.Services
             user.Sex = addUserForm.Sex;
             user.Birthday = addUserForm.BirthDay;
             user.Email = addUserForm.Email;
+            user.SyncCode = "";
 
             _context.users.Add(user);
         }
@@ -108,6 +109,23 @@ namespace Noteloves_server.Services
         public bool CheckOldPassword(int id, string oldPassword)
         {
             return _context.users.Any(e => e.Id == id && e.Password == EncodePassword(oldPassword));
+        }
+
+        public void UpdateSyncCode(int id)
+        {
+            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            var stringChars = new char[8];
+            var random = new Random();
+
+            for (int i = 0; i < stringChars.Length; i++)
+            {
+                stringChars[i] = chars[random.Next(chars.Length)];
+            }
+
+            var user = _context.users.First(a => a.Id == id);
+            user.SyncCode = new String(stringChars);
+
+            _context.SaveChanges();
         }
     }
 }

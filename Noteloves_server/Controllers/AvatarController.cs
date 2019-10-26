@@ -37,6 +37,11 @@ namespace Noteloves_server.Controllers
                 return BadRequest(ModelState);
             }
 
+            if (!_userService.UserExistsById(userId))
+            {
+                return NotFound(new Response("404", "User not exist!"));
+            }
+
             if (!_avatarService.AvatarExistsByUserId(userId))
             {
                 return NotFound(new Response("404", "User is not Avatar!"));
@@ -67,14 +72,7 @@ namespace Noteloves_server.Controllers
                 return NotFound(new Response("404", "User not exist!"));
             }
 
-            byte[] fileBytes;
-            using (var ms = new MemoryStream())
-            {
-                avatar.CopyTo(ms);
-                fileBytes = ms.ToArray();
-            }
-
-            _avatarService.UpdateAvatar(userId, fileBytes);
+            _avatarService.UpdateAvatar(userId, avatar);
             await _context.SaveChangesAsync();
 
             return Ok(new Response("200", "Successfully Updated!"));

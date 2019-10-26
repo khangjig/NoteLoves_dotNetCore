@@ -12,7 +12,7 @@ namespace Noteloves_server.Models
         [Key]
         public int Id { get; set; }
 
-        [ForeignKey("Student")]
+        [ForeignKey("User")]
         public int UserId { get; set; }
         
         public int PartnerId { get; set; }
