@@ -15,6 +15,11 @@ namespace Noteloves_server.Data
 
         public DbSet<User> users { get; set; }
         public DbSet<Avatar> avatars { get; set; }
+        public DbSet<Note> notes { get; set; }
+        public DbSet<NoteImage> note_images{ get; set; }
+        public DbSet<DateInfo> date_info { get; set; }
+        public DbSet<Notification> notifications { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>()
@@ -35,6 +40,34 @@ namespace Noteloves_server.Data
 
             modelBuilder.Entity<Avatar>()
                 .Property(avatars => avatars.UpdateAt)
+                .HasDefaultValueSql("getdate()");
+
+            modelBuilder.Entity<Note>()
+                .Property(notes => notes.CreatedAt)
+                .HasDefaultValueSql("getdate()");
+
+            modelBuilder.Entity<Note>()
+                .Property(notes => notes.UpdateAt)
+                .HasDefaultValueSql("getdate()");
+
+            modelBuilder.Entity<NoteImage>()
+                .Property(noteimages => noteimages.CreatedAt)
+                .HasDefaultValueSql("getdate()");
+
+            modelBuilder.Entity<Notification>()
+                .Property(notifications => notifications.CreatedAt)
+                .HasDefaultValueSql("getdate()");
+
+            modelBuilder.Entity<Notification>()
+                .Property(notifications => notifications.Status)
+                .HasDefaultValue(false);
+
+            modelBuilder.Entity<DateInfo>()
+                .Property(dateInfo => dateInfo.CreatedAt)
+                .HasDefaultValueSql("getdate()");
+
+            modelBuilder.Entity<DateInfo>()
+                .Property(dateInfo => dateInfo.UpdateAt)
                 .HasDefaultValueSql("getdate()");
         }
     }

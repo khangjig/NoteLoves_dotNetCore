@@ -31,13 +31,24 @@ namespace Noteloves_server.Models
         [Required(ErrorMessage = "Please choose your birthday")]
         public DateTime Birthday { get; set; }
 
+        [Required]
+        [StringLength(100)]
+        public string SyncCode { get; set; }
+
         [StringLength(100)]
         public string RefreshToken { get; set; }
 
         [Timestamp]
         public DateTime CreatedAt { get; set; }
+
         public DateTime UpdateAt { get; set; }
         
         public virtual Avatar Avatar{ get; set; }
+
+        public virtual DateInfo DateInfo { get; set; }
+
+        public List<Note> Notes { get; set; }
+
+        public List<Notification> Notifications { get; set; }
     }
 }
