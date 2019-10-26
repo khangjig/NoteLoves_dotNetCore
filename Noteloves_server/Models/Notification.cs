@@ -23,6 +23,9 @@ namespace Noteloves_server.Models
         [Timestamp]
         public DateTime CreatedAt { get; set; }
 
+        [Required]
+        public int PartnerId { get; set; }
+
         public int UserId { get; set; }
 
         public User Users { get; set; }

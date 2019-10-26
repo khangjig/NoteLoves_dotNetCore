@@ -50,7 +50,7 @@ namespace Noteloves_server.Services
             user.Name = editUserForm.Name;
             user.Sex = editUserForm.Sex;
             user.Birthday = editUserForm.BirthDay;
-            user.UpdateAt = DateTime.Now;
+            user.UpdatedAt = DateTime.Now;
 
             _context.SaveChanges();
         }
@@ -60,7 +60,7 @@ namespace Noteloves_server.Services
             var user = _context.users.First(a => a.Id == id);
 
             user.Password = EncodePassword(newPassword);
-            user.UpdateAt = DateTime.Now;
+            user.UpdatedAt = DateTime.Now;
         }
 
         public void UpdateRefreshToken(int id, string refreshToken)

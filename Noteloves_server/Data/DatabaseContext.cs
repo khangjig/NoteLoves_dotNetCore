@@ -32,7 +32,7 @@ namespace Noteloves_server.Data
                 .HasDefaultValueSql("getdate()");
 
             modelBuilder.Entity<User>()
-                .Property(user => user.UpdateAt)
+                .Property(user => user.UpdatedAt)
                 .HasDefaultValueSql("getdate()");
 
             modelBuilder.Entity<Avatar>()
@@ -40,7 +40,7 @@ namespace Noteloves_server.Data
                 .HasDefaultValueSql("getdate()");
 
             modelBuilder.Entity<Avatar>()
-                .Property(avatars => avatars.UpdateAt)
+                .Property(avatars => avatars.UpdatedAt)
                 .HasDefaultValueSql("getdate()");
 
             modelBuilder.Entity<Note>()
@@ -48,7 +48,7 @@ namespace Noteloves_server.Data
                 .HasDefaultValueSql("getdate()");
 
             modelBuilder.Entity<Note>()
-                .Property(notes => notes.UpdateAt)
+                .Property(notes => notes.UpdatedAt)
                 .HasDefaultValueSql("getdate()");
 
             modelBuilder.Entity<Note>()
@@ -72,7 +72,7 @@ namespace Noteloves_server.Data
                 .HasDefaultValueSql("getdate()");
 
             modelBuilder.Entity<DateInfo>()
-                .Property(dateInfo => dateInfo.UpdateAt)
+                .Property(dateInfo => dateInfo.UpdatedAt)
                 .HasDefaultValueSql("getdate()");
         }
     }

@@ -20,7 +20,7 @@ namespace Noteloves_server.Models
         [Timestamp]
         public DateTime CreatedAt { get; set; }
         
-        public DateTime UpdateAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
         
         public virtual User User { get; set; }
     }

@@ -7,25 +7,25 @@ using System.Threading.Tasks;
 
 namespace Noteloves_server.Models
 {
-    public class DateInfo
+    public class Partner
     {
         [Key]
         public int Id { get; set; }
 
         [ForeignKey("User")]
         public int UserId { get; set; }
-        
-        public int PartnerId { get; set; }
 
-        [Required]
-        public DateTime LoveDate { get; set; }
+        [Required(ErrorMessage = "Please enter his/her name")]
+        [StringLength(50)]
+        public string Name { get; set; }
 
-        public string Status { get; set; }
+        [Required(ErrorMessage = "Please choose his/her sex")]
+        public bool Sex { get; set; }
 
-        [Timestamp]
-        public DateTime CreatedAt { get; set; }
+        [Required(ErrorMessage = "Please choose his/her birthday")]
+        public DateTime Birthday { get; set; }
 
-        public DateTime UpdatedAt { get; set; }
+        public byte[] Avatar { get; set; }
 
         public virtual User User { get; set; }
     }
