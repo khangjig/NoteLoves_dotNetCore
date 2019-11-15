@@ -88,5 +88,17 @@ namespace Noteloves_server.JWTProvider.Services
                 return Convert.ToBase64String(randomNumber);
             }
         }
+
+        public string GetEmailByToken(string accessToken)
+        {
+            var token = new JwtSecurityTokenHandler().ReadJwtToken(accessToken);
+            return token.Claims.First(c => c.Type == "email").Value;
+        }
+
+        public int GetIdByToken(string accessToken)
+        {
+            var principal = GetPrincipalFromExpiredToken(accessToken);
+            return Convert.ToInt32(principal.Identity.Name);
+        }
     }
 }

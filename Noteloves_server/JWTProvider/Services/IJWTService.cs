@@ -13,5 +13,7 @@ namespace Noteloves_server.JWTProvider.Services
         string GenerateRefreshToken();
         bool CheckAccount(LoginForm loginRequest);
         ClaimsPrincipal GetPrincipalFromExpiredToken(string token);
+        string GetEmailByToken(string accessToken);
+        int GetIdByToken(string accessToken);
     }
 }

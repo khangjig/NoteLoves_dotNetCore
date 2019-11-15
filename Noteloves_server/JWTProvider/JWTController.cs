@@ -61,11 +61,7 @@ namespace Noteloves_server.JWTProvider
         [Route("/auth/refreshtoken")]
         public IActionResult RefreshToken([FromBody] RefreshTokenRequest refreshTokenRequest)
         {
-            var principal = _jWTService.GetPrincipalFromExpiredToken(refreshTokenRequest.AccessToken);
-            var id = principal.Identity.Name;
-
-            var token = new JwtSecurityTokenHandler().ReadJwtToken(refreshTokenRequest.AccessToken);
-            var email = token.Claims.First(c => c.Type == "email").Value;
+            var email = _jWTService.GetEmailByToken(refreshTokenRequest.AccessToken);
 
             var savedRefreshToken = _userService.GetRefreshToken(email);
             if (savedRefreshToken != refreshTokenRequest.RefreshToken)
