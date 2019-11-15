@@ -62,17 +62,18 @@ namespace Noteloves_server.JWTProvider
         public IActionResult RefreshToken([FromBody] RefreshTokenRequest refreshTokenRequest)
         {
             var principal = _jWTService.GetPrincipalFromExpiredToken(refreshTokenRequest.AccessToken);
-            var email = principal.Identity.Name;
-            var savedRefreshToken = _userService.GetRefreshToken(email); //retrieve the refresh token from a data store
+            var id = principal.Identity.Name;
+
+            var token = new JwtSecurityTokenHandler().ReadJwtToken(refreshTokenRequest.AccessToken);
+            var email = token.Claims.First(c => c.Type == "email").Value;
+
+            var savedRefreshToken = _userService.GetRefreshToken(email);
             if (savedRefreshToken != refreshTokenRequest.RefreshToken)
                 return BadRequest(new Response("400", "Invalid refresh token"));
 
             var newAccessToken = _jWTService.GenerateToken(email);
             var newRefreshToken = _jWTService.GenerateRefreshToken();
             _userService.UpdateRefreshToken(_userService.GetIdByEmail(email), newRefreshToken);
-
-            //var token = new JwtSecurityTokenHandler().ReadJwtToken(refreshTokenRequest.AccessToken);
-            //var claim = token.Claims.First(c => c.Type == "email").Value;
 
             return Ok(new LoginRespone(newAccessToken, newRefreshToken));
         }

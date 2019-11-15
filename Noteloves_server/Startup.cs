@@ -82,6 +82,7 @@ namespace Noteloves_server
             else
             {
                 app.UseHsts();
+                app.UseHttpsRedirection();
             }
 
             // Global CORS policy
@@ -91,7 +92,7 @@ namespace Noteloves_server
                 .AllowAnyHeader());
             app.UseAuthentication();
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseMvc();
         }
     }
