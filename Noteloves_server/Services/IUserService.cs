@@ -13,7 +13,7 @@ namespace Noteloves_server.Services
         void AddUser(AddUserForm addUserForm);
         IEnumerable<User> GetAllUser();
         void ChangePassword(int id, string newPassword);
-        void EidtInfomation(EditUserForm editUserForm);
+        void EidtInfomation(int id, EditUserForm editUserForm);
         User GetInfomation(int id);
         void UpdateRefreshToken(int id, string refreshToken);
         int GetIdByEmail(string email);
@@ -23,5 +23,6 @@ namespace Noteloves_server.Services
         bool UserExistsById(int id);
         bool UserExistsByEmail(string email);
         void UpdateSyncCode(int id);
+        void EditUserName(int id, string userName);
     }
 }

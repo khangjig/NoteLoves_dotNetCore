@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 using Noteloves_server.Messages.Requests;
 using Noteloves_server.Services;
 using Noteloves_server.Messages.Responses;
+using Noteloves_server.JWTProvider.Services;
 
 namespace Noteloves_server.Controllers
 {
@@ -23,28 +24,30 @@ namespace Noteloves_server.Controllers
     {
         private readonly DatabaseContext _context;
         private IUserService _userService;
+        private IJWTService _jWTService;
 
-        public UsersController(DatabaseContext context, IUserService userService)
+        public UsersController(DatabaseContext context, IUserService userService, IJWTService jWTService)
         {
             _context = context;
             _userService = userService;
+            _jWTService = jWTService;
         }
-        
-        // GET: api/Users
+
+        // GET: api/Users/ListUser
         [HttpGet]
-        public IActionResult Getusers()
+        [Route("ListUser")]
+        public IActionResult GetListUsers()
         {
             return Ok(new DataResponse("200", _userService.GetAllUser(), "Successfully!"));
         }
 
-        // GET: api/Users/5
-        [HttpGet("{id}")]
-        public IActionResult GetUserById([FromRoute] int id)
+        // GET: api/Users
+        [HttpGet]
+        public IActionResult GetUserByToken()
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            var authorization = Request.Headers["Authorization"];
+            var accessToken = authorization.ToString().Replace("Bearer ", "");
+            var id = _jWTService.GetIdByToken(accessToken);
 
             var user = _userService.GetInfomation(id);
 
@@ -60,46 +63,73 @@ namespace Noteloves_server.Controllers
         }
 
         // PUT: api/Users/EditInfo
-        [HttpPut("{EditInfo}")]
-        public async Task<IActionResult> EditInformationUser([FromBody] EditUserForm editUserForm)
+        [HttpPut]
+        [Route("EditInfo")]
+        public  IActionResult EditInformationUserByToken([FromBody] EditUserForm editUserForm)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
+            var authorization = Request.Headers["Authorization"];
+            var accessToken = authorization.ToString().Replace("Bearer ", "");
+            var id = _jWTService.GetIdByToken(accessToken);
 
-            if (!_userService.UserExistsById(editUserForm.Id))
+            if (!_userService.UserExistsById(id))
             {
                 return NotFound(new Response("404", "User not found!"));
             }
 
-            _userService.EidtInfomation(editUserForm);
-            await _context.SaveChangesAsync();
+            _userService.EidtInfomation(id, editUserForm);
+
+            return Ok(new Response("200", "Successfully!"));
+        }
+
+        // PUT: api/Users/EditNameUser
+        [HttpPatch]
+        [Route("EditNameUser")]
+        public IActionResult EditUserNameByToken([FromForm] string newName)
+        {
+            if (newName == null)
+            {
+                return BadRequest(new Response("400", "Username not null!"));
+            }
+
+            var authorization = Request.Headers["Authorization"];
+            var accessToken = authorization.ToString().Replace("Bearer ", "");
+            var id = _jWTService.GetIdByToken(accessToken);
+
+            if (!_userService.UserExistsById(id))
+            {
+                return NotFound(new Response("404", "User not found!"));
+            }
+
+            _userService.EditUserName(id, newName);
 
             return Ok(new Response("200", "Successfully!"));
         }
 
         // PUT: api/Users/ChangePassword
-        [HttpPatch("{ChangePassword}")]
-        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordForm changePasswordForm)
+        [HttpPatch]
+        [Route("ChangePassword")]
+        public IActionResult ChangePasswordByToken([FromBody] ChangePasswordForm changePasswordForm)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (!_userService.UserExistsById(changePasswordForm.Id))
+            var authorization = Request.Headers["Authorization"];
+            var accessToken = authorization.ToString().Replace("Bearer ", "");
+            var id = _jWTService.GetIdByToken(accessToken);
+
+            if (!_userService.UserExistsById(id))
             {
                 return NotFound(new Response("404", "User not found!"));
             }
 
-            if (!_userService.CheckOldPassword(changePasswordForm.Id, changePasswordForm.OldPassword))
+            if (!_userService.CheckOldPassword(id, changePasswordForm.OldPassword))
             {
                 return BadRequest(new Response("400", "Old password not correct!"));
             }
 
-            _userService.ChangePassword(changePasswordForm.Id, changePasswordForm.NewPassword);
-            await _context.SaveChangesAsync();
+            _userService.ChangePassword(id, changePasswordForm.NewPassword);
 
             return Ok(new Response("200", "Successfully!"));
         }

@@ -43,9 +43,9 @@ namespace Noteloves_server.Services
             return _context.users.Find(id);
         }
 
-        public void EidtInfomation(EditUserForm editUserForm)
+        public void EidtInfomation(int id, EditUserForm editUserForm)
         {
-            var user = _context.users.First(a => a.Id == editUserForm.Id);
+            var user = _context.users.First(a => a.Id == id);
 
             user.Name = editUserForm.Name;
             user.Sex = editUserForm.Sex;
@@ -61,6 +61,8 @@ namespace Noteloves_server.Services
 
             user.Password = EncodePassword(newPassword);
             user.UpdatedAt = DateTime.Now;
+
+            _context.SaveChanges();
         }
 
         public void UpdateRefreshToken(int id, string refreshToken)
@@ -124,6 +126,14 @@ namespace Noteloves_server.Services
 
             var user = _context.users.First(a => a.Id == id);
             user.SyncCode = new String(stringChars);
+
+            _context.SaveChanges();
+        }
+
+        public void EditUserName(int id, string userName)
+        {
+            var user = _context.users.First(a => a.Id == id);
+            user.Name = userName;
 
             _context.SaveChanges();
         }

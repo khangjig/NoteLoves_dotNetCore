@@ -36,7 +36,7 @@ namespace Noteloves_server.JWTProvider.Services
             return true;
         }
 
-        public string GenerateToken(string email)
+        public string GenerateToken(int id, string email)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
@@ -45,7 +45,7 @@ namespace Noteloves_server.JWTProvider.Services
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                         //new Claim("email", email)
-                        new Claim(ClaimTypes.Name,"1"),
+                        new Claim(ClaimTypes.Name, id.ToString()),
                         new Claim(ClaimTypes.Email,email)
                 }),
                 Expires = DateTime.UtcNow.AddDays(30),

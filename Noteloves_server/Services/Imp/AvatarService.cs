@@ -38,8 +38,8 @@ namespace Noteloves_server.Services.Imp
                 var avatar = _context.avatars.First(a => a.UserId == userId);
                 avatar.Image = EncodeImage(image);
                 avatar.UpdatedAt = DateTime.Now;
-                _context.SaveChanges();
             }
+            _context.SaveChanges();
         }
 
         public byte[] GetAvatar(int userId)

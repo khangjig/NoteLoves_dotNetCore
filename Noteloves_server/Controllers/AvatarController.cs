@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Noteloves_server.Data;
+using Noteloves_server.JWTProvider.Services;
 using Noteloves_server.Messages.Responses;
 using Noteloves_server.Services;
 
@@ -20,60 +21,77 @@ namespace Noteloves_server.Controllers
         private readonly DatabaseContext _context;
         private IAvatarService _avatarService;
         private IUserService _userService;
+        private IJWTService _jWTService;
 
-        public AvatarController(DatabaseContext context, IAvatarService avatarService, IUserService userService)
+        public AvatarController(DatabaseContext context, IAvatarService avatarService, IUserService userService, IJWTService jWTService)
         {
             _context = context;
             _avatarService = avatarService;
             _userService = userService;
+            _jWTService = jWTService;
     }
 
-        // GET: api/Avatar/5
-        [HttpGet("{userId}")]
-        public IActionResult GetAvatarByUserId([FromRoute] int userId)
+        // GET: api/Avatar?token =...
+        [AllowAnonymous]
+        [HttpGet]
+        public IActionResult GetAvatarByParamToken([FromQuery] string token)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (!_userService.UserExistsById(userId))
+            if (token == null)
             {
-                return NotFound(new Response("404", "User not exist!"));
+                return BadRequest(new Response("400", "Parameters is not invalid!"));
             }
 
-            if (!_avatarService.AvatarExistsByUserId(userId))
+            try
             {
-                return NotFound(new Response("404", "User is not Avatar!"));
+                var userId = _jWTService.GetIdByToken(token);
+
+                if (!_userService.UserExistsById(userId))
+                {
+                    return NotFound(new Response("404", "User not exist!"));
+                }
+
+                if (!_avatarService.AvatarExistsByUserId(userId))
+                {
+                    return NotFound(new Response("404", "User is not Avatar!"));
+                }
+
+                var avatar = _avatarService.GetAvatar(userId);
+                MemoryStream image = new MemoryStream(avatar);
+
+                return Ok(image);
+            }
+            catch
+            {
+                return BadRequest(new Response("400", "Parameters is not invalid!"));
             }
 
-            var avatar = _avatarService.GetAvatar(userId);
-            MemoryStream image = new MemoryStream(avatar);
-
-            return Ok(image);
         }
 
         // POST: api/Avatar/updated
-        [HttpPost("{updated}")]
-        public async Task<IActionResult> UpdateAvatar([FromForm] int userId, IFormFile avatar)
+        [HttpPost]
+        [Route("updated")]
+        public IActionResult UpdateAvatar(IFormFile avatar)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            var authorization = Request.Headers["Authorization"];
+            var accessToken = authorization.ToString().Replace("Bearer ", "");
+            var id = _jWTService.GetIdByToken(accessToken);
 
             if (avatar == null || avatar.Length == 0)
             {
                 return BadRequest(new Response("400", "No Image"));
             }
 
-            if (!_userService.UserExistsById(userId))
+            if (!_userService.UserExistsById(id))
             {
                 return NotFound(new Response("404", "User not exist!"));
             }
 
-            _avatarService.UpdateAvatar(userId, avatar);
-            await _context.SaveChangesAsync();
+            _avatarService.UpdateAvatar(id, avatar);
 
             return Ok(new Response("200", "Successfully Updated!"));
         }

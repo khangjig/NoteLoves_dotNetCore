@@ -48,7 +48,8 @@ namespace Noteloves_server.JWTProvider
                 return NotFound(new Response("404", "Email or password is not correct!"));
             }
 
-            var AccessToken = _jWTService.GenerateToken(login.email);
+            var id = _userService.GetIdByEmail(login.email);
+            var AccessToken = _jWTService.GenerateToken(id, login.email);
             var RefreshToken = _jWTService.GenerateRefreshToken();
 
             _userService.UpdateRefreshToken(_userService.GetIdByEmail(login.email), RefreshToken);
@@ -62,12 +63,13 @@ namespace Noteloves_server.JWTProvider
         public IActionResult RefreshToken([FromBody] RefreshTokenRequest refreshTokenRequest)
         {
             var email = _jWTService.GetEmailByToken(refreshTokenRequest.AccessToken);
+            var id = _jWTService.GetIdByToken(refreshTokenRequest.AccessToken);
 
             var savedRefreshToken = _userService.GetRefreshToken(email);
             if (savedRefreshToken != refreshTokenRequest.RefreshToken)
                 return BadRequest(new Response("400", "Invalid refresh token"));
 
-            var newAccessToken = _jWTService.GenerateToken(email);
+            var newAccessToken = _jWTService.GenerateToken(id, email);
             var newRefreshToken = _jWTService.GenerateRefreshToken();
             _userService.UpdateRefreshToken(_userService.GetIdByEmail(email), newRefreshToken);
 
