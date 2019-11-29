@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Noteloves_server.Helpers;
 using Noteloves_server.JWTProvider.Services;
-using Noteloves_server.Messages.Requests;
+using Noteloves_server.Messages.Requests.JWT;
 using Noteloves_server.Messages.Responses;
 using Noteloves_server.Services;
 using System;

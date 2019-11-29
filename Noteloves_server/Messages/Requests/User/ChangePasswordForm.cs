@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Noteloves_server.Messages.Requests
+namespace Noteloves_server.Messages.Requests.User
 {
     public class ChangePasswordForm
     {

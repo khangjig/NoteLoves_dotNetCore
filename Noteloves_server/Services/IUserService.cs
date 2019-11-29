@@ -1,4 +1,4 @@
-﻿using Noteloves_server.Messages.Requests;
+﻿using Noteloves_server.Messages.Requests.User;
 using Noteloves_server.Models;
 using System;
 using System.Collections.Generic;

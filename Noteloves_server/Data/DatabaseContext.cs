@@ -55,6 +55,10 @@ namespace Noteloves_server.Data
                 .Property(notes => notes.Hidden)
                 .HasDefaultValue(false);
 
+            modelBuilder.Entity<Note>()
+                .HasIndex(note => new { note.Title })
+                .IsUnique(true);
+
             modelBuilder.Entity<NoteImage>()
                 .Property(noteimages => noteimages.CreatedAt)
                 .HasDefaultValueSql("getdate()");

@@ -10,7 +10,7 @@ using Noteloves_server.Models;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Authorization;
-using Noteloves_server.Messages.Requests;
+using Noteloves_server.Messages.Requests.User;
 using Noteloves_server.Services;
 using Noteloves_server.Messages.Responses;
 using Noteloves_server.JWTProvider.Services;
@@ -45,13 +45,11 @@ namespace Noteloves_server.Controllers
         [HttpGet]
         public IActionResult GetUserByToken()
         {
-            var authorization = Request.Headers["Authorization"];
-            var accessToken = authorization.ToString().Replace("Bearer ", "");
-            var id = _jWTService.GetIdByToken(accessToken);
+            var id = GetIdByToken(this);
 
             var user = _userService.GetInfomation(id);
 
-            if (user == null)
+            if (!_userService.UserExistsById(id))
             {
                 return NotFound(new Response("404", "User not found!"));
             }
@@ -67,9 +65,7 @@ namespace Noteloves_server.Controllers
         [Route("EditInfo")]
         public  IActionResult EditInformationUserByToken([FromBody] EditUserForm editUserForm)
         {
-            var authorization = Request.Headers["Authorization"];
-            var accessToken = authorization.ToString().Replace("Bearer ", "");
-            var id = _jWTService.GetIdByToken(accessToken);
+            var id = GetIdByToken(this);
 
             if (!_userService.UserExistsById(id))
             {
@@ -91,9 +87,7 @@ namespace Noteloves_server.Controllers
                 return BadRequest(new Response("400", "Username not null!"));
             }
 
-            var authorization = Request.Headers["Authorization"];
-            var accessToken = authorization.ToString().Replace("Bearer ", "");
-            var id = _jWTService.GetIdByToken(accessToken);
+            var id = GetIdByToken(this);
 
             if (!_userService.UserExistsById(id))
             {
@@ -115,9 +109,7 @@ namespace Noteloves_server.Controllers
                 return BadRequest(ModelState);
             }
 
-            var authorization = Request.Headers["Authorization"];
-            var accessToken = authorization.ToString().Replace("Bearer ", "");
-            var id = _jWTService.GetIdByToken(accessToken);
+            var id = GetIdByToken(this);
 
             if (!_userService.UserExistsById(id))
             {
@@ -156,6 +148,13 @@ namespace Noteloves_server.Controllers
             await _context.SaveChangesAsync();
 
             return Ok(new Response("200", "Successfully added!"));
+        }
+
+        private int GetIdByToken(UsersController usersController)
+        {
+            var authorization = Request.Headers["Authorization"];
+            var accessToken = authorization.ToString().Replace("Bearer ", "");
+            return _jWTService.GetIdByToken(accessToken);
         }
     }
 }

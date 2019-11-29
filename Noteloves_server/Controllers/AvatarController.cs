@@ -31,16 +31,12 @@ namespace Noteloves_server.Controllers
             _jWTService = jWTService;
     }
 
-        // GET: api/Avatar?token =...
+        // GET: api/Avatar/image?token =...
         [AllowAnonymous]
         [HttpGet]
+        [Route("image")]
         public IActionResult GetAvatarByParamToken([FromQuery] string token)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             if (token == null)
             {
                 return BadRequest(new Response("400", "Parameters is not invalid!"));
@@ -61,7 +57,10 @@ namespace Noteloves_server.Controllers
                 }
 
                 var avatar = _avatarService.GetAvatar(userId);
+
                 MemoryStream image = new MemoryStream(avatar);
+                //var image = Convert.ToBase64String(avatar);
+                //var bytes = Convert.FromBase64String(image);
 
                 return Ok(image);
             }
@@ -72,14 +71,35 @@ namespace Noteloves_server.Controllers
 
         }
 
+        // GET: api/Avatar/image-base64
+        [HttpGet]
+        [Route("image-base64")]
+        public IActionResult GetAvatarBase64ByParamToken()
+        {
+            var userId = GetIdByToken(this);
+
+            if (!_userService.UserExistsById(userId))
+            {
+                return NotFound(new Response("404", "User not exist!"));
+            }
+
+            if (!_avatarService.AvatarExistsByUserId(userId))
+            {
+                return Ok(new DataResponse("200", "", "Successfully!"));
+            }
+
+            var avatar = _avatarService.GetAvatar(userId);
+
+            return Ok(new DataResponse("200", Convert.ToBase64String(avatar), "Successfully!"));
+
+        }
+
         // POST: api/Avatar/updated
         [HttpPost]
         [Route("updated")]
         public IActionResult UpdateAvatar(IFormFile avatar)
         {
-            var authorization = Request.Headers["Authorization"];
-            var accessToken = authorization.ToString().Replace("Bearer ", "");
-            var id = _jWTService.GetIdByToken(accessToken);
+            var id = GetIdByToken(this);
 
             if (avatar == null || avatar.Length == 0)
             {
@@ -94,6 +114,13 @@ namespace Noteloves_server.Controllers
             _avatarService.UpdateAvatar(id, avatar);
 
             return Ok(new Response("200", "Successfully Updated!"));
+        }
+
+        private int GetIdByToken(AvatarController avatarController)
+        {
+            var authorization = Request.Headers["Authorization"];
+            var accessToken = authorization.ToString().Replace("Bearer ", "");
+            return _jWTService.GetIdByToken(accessToken);
         }
     }
 }

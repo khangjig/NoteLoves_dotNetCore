@@ -2,7 +2,7 @@
 using Microsoft.IdentityModel.Tokens;
 using Noteloves_server.Data;
 using Noteloves_server.Helpers;
-using Noteloves_server.Messages.Requests;
+using Noteloves_server.Messages.Requests.JWT;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
