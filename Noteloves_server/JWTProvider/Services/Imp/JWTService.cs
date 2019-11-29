@@ -44,9 +44,10 @@ namespace Noteloves_server.JWTProvider.Services
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                        //new Claim("email", email)
-                        new Claim(ClaimTypes.Name, id.ToString()),
-                        new Claim(ClaimTypes.Email,email)
+                    // unique_name -> 
+                    //new Claim(ClaimTypes.Name, id.ToString()),
+                    new Claim("id",  id.ToString()),
+                    new Claim(ClaimTypes.Email,email)
                 }),
                 Expires = DateTime.UtcNow.AddDays(30),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -97,8 +98,12 @@ namespace Noteloves_server.JWTProvider.Services
 
         public int GetIdByToken(string accessToken)
         {
-            var principal = GetPrincipalFromExpiredToken(accessToken);
-            return Convert.ToInt32(principal.Identity.Name);
+            // unique_name -> 
+            //var principal = GetPrincipalFromExpiredToken(accessToken);
+            //return Convert.ToInt32(principal.Identity.Name);
+
+            var token = new JwtSecurityTokenHandler().ReadJwtToken(accessToken);
+            return int.Parse(token.Claims.First(c => c.Type == "id").Value);
         }
     }
 }
