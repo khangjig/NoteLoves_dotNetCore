@@ -12,5 +12,6 @@ namespace Noteloves_server.Messages.Requests.Note
         public string Content { get; set; }
         public DateTime Anniversary { get; set; }
         public bool Hidden { get; set; }
+        public bool Alarm { get; set; }
     }
 }

@@ -60,7 +60,7 @@ namespace Noteloves_server.Controllers
             _noteService.AddNote(id, addNoteForm);
             await _context.SaveChangesAsync();
 
-            _noteImageService.AddListImage(_noteService.GetNoteIdByTitle(addNoteForm.Title), images);
+            _noteImageService.AddListImage(_noteService.GetNewestNote(id), images);
             await _context.SaveChangesAsync();
 
             return Ok(new Response("200", "Successfully added!"));
@@ -111,6 +111,11 @@ namespace Noteloves_server.Controllers
             if (!_userService.UserExistsById(userId))
             {
                 return NotFound(new Response("404", "User not found!"));
+            }
+
+            if (_noteService.CheckTitle(updateNoteForm.Title))
+            {
+                return BadRequest(new Response("400", "Title is exist!"));
             }
 
             if (!_noteService.CheckNoteByUser(userId, updateNoteForm.Id) || !_noteService.CheckNoteExist(updateNoteForm.Id))

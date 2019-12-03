@@ -17,7 +17,6 @@ namespace Noteloves_server.Data
         public DbSet<Avatar> avatars { get; set; }
         public DbSet<Note> notes { get; set; }
         public DbSet<NoteImage> note_images{ get; set; }
-        public DbSet<DateInfo> date_info { get; set; }
         public DbSet<Notification> notifications { get; set; }
         public DbSet<Partner> partner { get; set; }
 
@@ -55,10 +54,6 @@ namespace Noteloves_server.Data
                 .Property(notes => notes.Hidden)
                 .HasDefaultValue(false);
 
-            modelBuilder.Entity<Note>()
-                .HasIndex(note => new { note.Title })
-                .IsUnique(true);
-
             modelBuilder.Entity<NoteImage>()
                 .Property(noteimages => noteimages.CreatedAt)
                 .HasDefaultValueSql("getdate()");
@@ -70,14 +65,6 @@ namespace Noteloves_server.Data
             modelBuilder.Entity<Notification>()
                 .Property(notifications => notifications.Status)
                 .HasDefaultValue(false);
-
-            modelBuilder.Entity<DateInfo>()
-                .Property(dateInfo => dateInfo.CreatedAt)
-                .HasDefaultValueSql("getdate()");
-
-            modelBuilder.Entity<DateInfo>()
-                .Property(dateInfo => dateInfo.UpdatedAt)
-                .HasDefaultValueSql("getdate()");
         }
     }
 }

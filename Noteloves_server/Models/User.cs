@@ -11,7 +11,7 @@ namespace Noteloves_server.Models
         [Key]
         public int Id { get; set; }
 
-        [Required(ErrorMessage ="Please enter your email")]
+        [Required(ErrorMessage = "Please enter your email")]
         [DataType(DataType.EmailAddress)]
         //[RegularExpression(@"a-z0-9", ErrorMessage ="Please enter correct email address")]
         [StringLength(50)]
@@ -25,11 +25,14 @@ namespace Noteloves_server.Models
         [StringLength(50)]
         public string Name { get; set; }
 
-        [Required(ErrorMessage = "Please choose your sex")]
-        public bool Sex { get; set; }
-
         [Required(ErrorMessage = "Please choose your birthday")]
+        [DisplayFormat(DataFormatString = "{0:dd/mm/yyyy}")]
+        [DataType(DataType.Date)]
         public DateTime Birthday { get; set; }
+
+        public DateTime LoveDate { get; set; }
+
+        public int PartnerId { get; set; }
 
         [Required]
         [StringLength(100)]
@@ -44,8 +47,6 @@ namespace Noteloves_server.Models
         public DateTime UpdatedAt { get; set; }
         
         public virtual Avatar Avatar{ get; set; }
-
-        public virtual DateInfo DateInfo { get; set; }
 
         public List<Note> Notes { get; set; }
 

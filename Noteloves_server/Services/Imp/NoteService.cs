@@ -28,6 +28,7 @@ namespace Noteloves_server.Services.Imp
             note.Content = addNoteForm.Content;
             note.Anniversary = addNoteForm.Anniversary;
             note.Hidden = addNoteForm.Hidden;
+            note.Alarm = addNoteForm.Alarm;
 
             _context.Add(note);
         }
@@ -39,6 +40,7 @@ namespace Noteloves_server.Services.Imp
             note.Content = updateNoteForm.Content;
             note.Anniversary = updateNoteForm.Anniversary;
             note.Hidden = updateNoteForm.Hidden;
+            note.Alarm = updateNoteForm.Alarm;
             note.UpdatedAt = DateTime.Now;
 
             _context.SaveChanges();
@@ -92,6 +94,11 @@ namespace Noteloves_server.Services.Imp
             return listNoteDataResponses;
         }
 
+        //public List GetNoteOnThisDay()
+        //{
+
+        //}
+
         public bool CheckTitle(string title)
         {
             return _context.notes.Any(e => e.Title == title);
@@ -102,10 +109,10 @@ namespace Noteloves_server.Services.Imp
             return _context.notes.Any(e => e.UserId == userId && e.Id ==noteId);
         }
 
-        public int GetNoteIdByTitle(string title)
+        public int GetNewestNote(int UserID)
         {
-            var note = _context.notes.First(x => x.Title == title);
-            return note.Id;
+            var note = _context.notes.Where(x=>x.UserId== UserID).OrderByDescending(x=>x.CreatedAt).Take(1).ToList();
+            return note[0].Id;
         }
 
         public bool CheckNoteExist(int noteId)

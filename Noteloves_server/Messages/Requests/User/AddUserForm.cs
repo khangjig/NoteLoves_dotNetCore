@@ -10,7 +10,6 @@ namespace Noteloves_server.Messages.Requests.User
         public string Email { get; set; }
         public string Password { get; set; }
         public string Name { get; set; }
-        public bool Sex { get; set; }
         public DateTime BirthDay { get; set; }
     }
 }

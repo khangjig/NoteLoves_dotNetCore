@@ -19,9 +19,6 @@ namespace Noteloves_server.Models
         [StringLength(50)]
         public string Name { get; set; }
 
-        [Required(ErrorMessage = "Please choose his/her sex")]
-        public bool Sex { get; set; }
-
         [Required(ErrorMessage = "Please choose his/her birthday")]
         public DateTime Birthday { get; set; }
 

@@ -23,6 +23,9 @@ namespace Noteloves_server.Models
         [Required]
         public bool Hidden { get; set; }
 
+        [Required]
+        public bool Alarm { get; set; }
+
         [Timestamp]
         public DateTime CreatedAt { get; set; }
 

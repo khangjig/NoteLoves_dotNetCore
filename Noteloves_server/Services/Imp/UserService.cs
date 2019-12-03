@@ -30,7 +30,6 @@ namespace Noteloves_server.Services
 
             user.Password = EncodePassword(addUserForm.Password);
             user.Name = addUserForm.Name;
-            user.Sex = addUserForm.Sex;
             user.Birthday = addUserForm.BirthDay;
             user.Email = addUserForm.Email;
             user.SyncCode = "";
@@ -48,7 +47,6 @@ namespace Noteloves_server.Services
             var user = _context.users.First(a => a.Id == id);
 
             user.Name = editUserForm.Name;
-            user.Sex = editUserForm.Sex;
             user.Birthday = editUserForm.BirthDay;
             user.UpdatedAt = DateTime.Now;
 
@@ -134,6 +132,22 @@ namespace Noteloves_server.Services
         {
             var user = _context.users.First(a => a.Id == id);
             user.Name = userName;
+
+            _context.SaveChanges();
+        }
+
+        public void EditBirthday(int id, DateTime birthday)
+        {
+            var user = _context.users.First(a => a.Id == id);
+            user.Birthday = birthday;
+
+            _context.SaveChanges();
+        }
+
+        public void UpdatePartnerId(int id, int partnerID)
+        {
+            var user = _context.users.First(a => a.Id == id);
+            user.PartnerId = partnerID;
 
             _context.SaveChanges();
         }

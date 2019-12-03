@@ -99,6 +99,50 @@ namespace Noteloves_server.Controllers
             return Ok(new Response("200", "Successfully!"));
         }
 
+        // PUT: api/Users/EditBirthday
+        [HttpPatch]
+        [Route("EditBirthday")]
+        public IActionResult EditBirthdayByToken([FromForm] DateTime birthday)
+        {
+            var id = GetIdByToken(this);
+
+            if (!_userService.UserExistsById(id))
+            {
+                return NotFound(new Response("404", "User not found!"));
+            }
+
+            if (birthday > DateTime.Now)
+            {
+                return BadRequest(new Response("400", "Birthday not valid!"));
+            }
+
+            _userService.EditBirthday(id, birthday);
+
+            return Ok(new Response("200", "Successfully!"));
+        }
+
+        //// PUT: api/Users/UpdatePartnerID
+        //[HttpPatch]
+        //[Route("UpdatePartnerID")]
+        //public IActionResult UpdatePartnerIDByToken([FromForm] int partnerID)
+        //{
+        //    var id = GetIdByToken(this);
+
+        //    if (!_userService.UserExistsById(id))
+        //    {
+        //        return NotFound(new Response("404", "User not found!"));
+        //    }
+
+        //    if (!_userService.UserExistsById(partnerID) || id == partnerID)
+        //    {
+        //        return NotFound(new Response("404", "Partner not found!"));
+        //    }
+
+        //    _userService.UpdatePartnerId(id, partnerID);
+
+        //    return Ok(new Response("200", "Successfully!"));
+        //}
+
         // PUT: api/Users/ChangePassword
         [HttpPatch]
         [Route("ChangePassword")]

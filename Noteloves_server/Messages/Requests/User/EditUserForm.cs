@@ -9,6 +9,5 @@ namespace Noteloves_server.Messages.Requests.User
     {
         public string Name { get; set; }
         public DateTime BirthDay { get; set; }
-        public bool Sex { get; set; }
     }
 }

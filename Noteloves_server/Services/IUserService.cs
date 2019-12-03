@@ -24,5 +24,7 @@ namespace Noteloves_server.Services
         bool UserExistsByEmail(string email);
         void UpdateSyncCode(int id);
         void EditUserName(int id, string userName);
+        void EditBirthday(int id, DateTime birthday);
+        void UpdatePartnerId(int id, int partnerID);
     }
 }
