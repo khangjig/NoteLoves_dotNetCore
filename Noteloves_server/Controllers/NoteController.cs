@@ -47,11 +47,6 @@ namespace Noteloves_server.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (_noteService.CheckTitle(addNoteForm.Title))
-            {
-                return BadRequest(new Response("400", "Title not invalid!"));
-            }
-
             if (!_userService.UserExistsById(id))
             {
                 return NotFound(new Response("404", "User not found!"));
@@ -111,11 +106,6 @@ namespace Noteloves_server.Controllers
             if (!_userService.UserExistsById(userId))
             {
                 return NotFound(new Response("404", "User not found!"));
-            }
-
-            if (_noteService.CheckTitle(updateNoteForm.Title))
-            {
-                return BadRequest(new Response("400", "Title is exist!"));
             }
 
             if (!_noteService.CheckNoteByUser(userId, updateNoteForm.Id) || !_noteService.CheckNoteExist(updateNoteForm.Id))

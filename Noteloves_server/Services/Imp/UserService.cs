@@ -151,5 +151,13 @@ namespace Noteloves_server.Services
 
             _context.SaveChanges();
         }
+
+        public void UpdateLoveDay(int id, DateTime loveday)
+        {
+            var user = _context.users.First(a => a.Id == id);
+            user.LoveDate = loveday;
+
+            _context.SaveChanges();
+        }
     }
 }

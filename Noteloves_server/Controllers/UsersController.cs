@@ -143,6 +143,23 @@ namespace Noteloves_server.Controllers
         //    return Ok(new Response("200", "Successfully!"));
         //}
 
+        // PUT: api/Users/UpdateloveDay
+        [HttpPatch]
+        [Route("UpdateloveDay")]
+        public IActionResult UpdateLoveDayIDByToken([FromForm] DateTime loveDay)
+        {
+            var id = GetIdByToken(this);
+
+            if (!_userService.UserExistsById(id))
+            {
+                return NotFound(new Response("404", "User not found!"));
+            }
+
+            _userService.UpdateLoveDay(id, loveDay);
+
+            return Ok(new Response("200", "Successfully!"));
+        }
+
         // PUT: api/Users/ChangePassword
         [HttpPatch]
         [Route("ChangePassword")]

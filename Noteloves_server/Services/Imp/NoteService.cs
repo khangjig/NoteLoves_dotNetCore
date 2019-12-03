@@ -69,6 +69,7 @@ namespace Noteloves_server.Services.Imp
             //            .Take(size)
             //            .ToList();
 
+
             List < Note > listNotes = _context.notes
                                     .Where(x => x.UserId == userId)
                                     .OrderByDescending(x => x.CreatedAt)
@@ -98,11 +99,6 @@ namespace Noteloves_server.Services.Imp
         //{
 
         //}
-
-        public bool CheckTitle(string title)
-        {
-            return _context.notes.Any(e => e.Title == title);
-        }
 
         public bool CheckNoteByUser(int userId, int noteId)
         {

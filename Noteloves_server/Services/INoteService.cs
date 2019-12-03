@@ -16,7 +16,6 @@ namespace Noteloves_server.Services
         Note GetNoteById(int noteId);
         List<NoteDataResponse> GetListNote(int userId, int page, int size);
         //Note GetNoteOnThisDay();
-        bool CheckTitle(string title);
         int GetNewestNote(int UserID);
         bool CheckNoteByUser(int userId, int noteId);
         bool CheckNoteExist(int noteId);

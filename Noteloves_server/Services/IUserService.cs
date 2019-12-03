@@ -26,5 +26,6 @@ namespace Noteloves_server.Services
         void EditUserName(int id, string userName);
         void EditBirthday(int id, DateTime birthday);
         void UpdatePartnerId(int id, int partnerID);
+        void UpdateLoveDay(int id, DateTime loveday);
     }
 }
