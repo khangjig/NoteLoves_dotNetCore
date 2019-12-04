@@ -159,5 +159,24 @@ namespace Noteloves_server.Services
 
             _context.SaveChanges();
         }
+
+        public int GetIdBySyncCode(string syncCode)
+        {
+            return _context.users.FirstOrDefault(x => x.SyncCode == syncCode) == null 
+                ? -1 
+                : _context.users.FirstOrDefault(x => x.SyncCode == syncCode).Id;
+        }
+
+        public bool CheckSyncCode(int userId, string syncCode)
+        {
+            return _context.users.FirstOrDefault(x => x.Id == userId && x.SyncCode == syncCode) == null 
+                ? true :
+                false;
+        }
+
+        public bool CheckSync(int userId)
+        {
+            return _context.users.Find(userId).PartnerId > 0 ? true : false;
+        }
     }
 }

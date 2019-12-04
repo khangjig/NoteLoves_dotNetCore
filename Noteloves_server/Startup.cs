@@ -69,6 +69,7 @@ namespace Noteloves_server
             services.AddScoped<IAvatarService, AvatarService>();
             services.AddScoped<INoteService, NoteService>();
             services.AddScoped<INoteImageService, NoteImageService>();
+            services.AddScoped<INotificationService, NotificationService>();
 
         }
 

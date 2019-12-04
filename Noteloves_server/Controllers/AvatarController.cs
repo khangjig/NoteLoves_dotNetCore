@@ -29,7 +29,7 @@ namespace Noteloves_server.Controllers
             _avatarService = avatarService;
             _userService = userService;
             _jWTService = jWTService;
-    }
+        }
 
         // GET: api/Avatar/image?token =...
         [AllowAnonymous]

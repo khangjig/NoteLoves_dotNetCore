@@ -27,5 +27,8 @@ namespace Noteloves_server.Services
         void EditBirthday(int id, DateTime birthday);
         void UpdatePartnerId(int id, int partnerID);
         void UpdateLoveDay(int id, DateTime loveday);
+        int GetIdBySyncCode(string syncCode);
+        bool CheckSyncCode(int userId, string syncCode);
+        bool CheckSync(int userId);
     }
 }
