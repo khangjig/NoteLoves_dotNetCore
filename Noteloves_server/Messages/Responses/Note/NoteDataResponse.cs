@@ -12,24 +12,27 @@ namespace Noteloves_server.Messages.Responses.Note
         public string Content { get; set; }
         public DateTime Anniversary { get; set; }
         public bool Hidden{ get; set; }
+        public int UserId { get; set; }
         public string FirstImage { get; set; }
 
-        public NoteDataResponse(int id, string title, string content, DateTime anniversary, bool hidden)
+        public NoteDataResponse(int id, string title, string content, DateTime anniversary, bool hidden, int userId)
         {
             Id = id;
             Title = title;
             Content = content;
             Anniversary = anniversary;
             Hidden = hidden;
+            UserId = userId;
         }
 
-        public NoteDataResponse(int id, string title, string content, DateTime anniversary, bool hidden, string firstImage)
+        public NoteDataResponse(int id, string title, string content, DateTime anniversary, bool hidden, int userId, string firstImage)
         {
             Id = id;
             Title = title;
             Content = content;
             Anniversary = anniversary;
             Hidden = hidden;
+            UserId = userId;
             FirstImage = firstImage;
         }
     }

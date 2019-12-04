@@ -79,7 +79,7 @@ namespace Noteloves_server.Controllers
 
             var note = _noteService.GetNoteById(id);
 
-            return Ok(new DataResponse("200", new NoteDataResponse(note.Id, note.Title, note.Content, note.Anniversary, note.Hidden, null), "Successfully!"));
+            return Ok(new DataResponse("200", new NoteDataResponse(note.Id, note.Title, note.Content, note.Anniversary, note.Hidden, note.UserId, null), "Successfully!"));
         }
 
         // GET : api/note/list?page=1&size=10
