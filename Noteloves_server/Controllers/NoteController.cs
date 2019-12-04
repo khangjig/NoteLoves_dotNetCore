@@ -97,6 +97,60 @@ namespace Noteloves_server.Controllers
             return Ok(new DataResponse("200", _noteService.GetListNote(userId, page, size), "Successfully!"));
         }
 
+        // GET : api/note/onthisday
+        [HttpGet]
+        [Route("onthisday")]
+        public IActionResult GetNoteOnThisDayByToken()
+        {
+            var userId = GetIdByToken(this);
+
+            if (!_userService.UserExistsById(userId))
+            {
+                return NotFound(new Response("404", "User not found!"));
+            }
+
+            var note = _noteService.GetNoteOnThisDay(userId);
+
+
+            return Ok(new DataResponse("200", note, "Successfully!"));
+        }
+
+        // GET : api/note/byweek (in 7 days)
+        [HttpGet]
+        [Route("byweek")]
+        public IActionResult GetListNoteByWeekByToken()
+        {
+            var userId = GetIdByToken(this);
+
+            if (!_userService.UserExistsById(userId))
+            {
+                return NotFound(new Response("404", "User not found!"));
+            }
+
+            var note = _noteService.GetListNoteByWeek(userId);
+
+
+            return Ok(new DataResponse("200", note, "Successfully!"));
+        }
+
+        // GET : api/note/inmonth
+        [HttpGet]
+        [Route("inmonth")]
+        public IActionResult GetListNoteByMonthByToken()
+        {
+            var userId = GetIdByToken(this);
+
+            if (!_userService.UserExistsById(userId))
+            {
+                return NotFound(new Response("404", "User not found!"));
+            }
+
+            var note = _noteService.GetListNoteInMonth(userId);
+
+
+            return Ok(new DataResponse("200", note, "Successfully!"));
+        }
+
         // PUT : api/note
         [HttpPut]
         public IActionResult UpdateNoteByToken([FromForm] UpdateNoteForm updateNoteForm)

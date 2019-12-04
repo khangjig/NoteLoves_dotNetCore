@@ -15,7 +15,9 @@ namespace Noteloves_server.Services
         void DeleteNote(int noteId);
         Note GetNoteById(int noteId);
         List<NoteDataResponse> GetListNote(int userId, int page, int size);
-        //Note GetNoteOnThisDay();
+        List<NoteDataResponse> GetNoteOnThisDay(int userID);
+        List<NoteDataResponse> GetListNoteByWeek(int userID);
+        List<NoteDataResponse> GetListNoteInMonth(int userID);
         int GetNewestNote(int UserID);
         bool CheckNoteByUser(int userId, int noteId);
         bool CheckNoteExist(int noteId);

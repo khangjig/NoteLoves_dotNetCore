@@ -95,10 +95,123 @@ namespace Noteloves_server.Services.Imp
             return listNoteDataResponses;
         }
 
-        //public List GetNoteOnThisDay()
-        //{
+        public List<NoteDataResponse> GetNoteOnThisDay(int userID)
+        {
+            var listNotes = _context.notes
+                                    .Where(x => x.UserId == userID
+                                                && x.Alarm == true
+                                                && x.Anniversary.Day == DateTime.Now.Day
+                                                && x.Anniversary.Month == DateTime.Now.Month)
+                                    .OrderByDescending(x => x.Anniversary)
+                                    .Take(5)
+                                    .ToList();
 
-        //}
+            List<NoteDataResponse> listNoteDataResponses = new List<NoteDataResponse>();
+            foreach (Note note in listNotes)
+            {
+                if (_noteImageService.CheckExistImage(note.Id))
+                {
+                    var firstImage = Convert.ToBase64String(_noteImageService.GetFirstImage(note.Id));
+                    listNoteDataResponses.Add(new NoteDataResponse(note.Id, note.Title, note.Content, note.Anniversary, note.Hidden, firstImage));
+                }
+                else
+                {
+                    listNoteDataResponses.Add(new NoteDataResponse(note.Id, note.Title, note.Content, note.Anniversary, note.Hidden));
+                }
+
+            }
+
+            return listNoteDataResponses;
+        }
+
+        public List<NoteDataResponse> GetListNoteByWeek(int userID)
+        {
+            int days, months;
+            List<Note> listNotes;
+
+            DateTime DayNow = DateTime.Now;
+
+            if ((DayNow.Day + 7) > DateTime.DaysInMonth(DayNow.Year, DayNow.Month))
+            {
+                days = 7 - (DateTime.DaysInMonth(DayNow.Year, DayNow.Month) - DayNow.Day);
+                months = (DayNow.Month == 12) ? 1 : (DayNow.Month + 1);
+
+                listNotes = _context.notes
+                                    .Where(x => x.UserId == userID
+                                                && x.Alarm == true
+                                                && x.Anniversary.Day > DayNow.Day
+                                                && x.Anniversary.Day <= DayNow.Day + 7
+                                                && x.Anniversary.Month == DayNow.Month)
+                                    .Union(_context.notes
+                                            .Where(x => x.UserId == userID
+                                                && x.Alarm == true
+                                                && x.Anniversary.Day >= 1
+                                                && x.Anniversary.Day <= days
+                                                && x.Anniversary.Month == months)
+                                        )
+                                    .OrderBy(x => x.Anniversary)
+                                    .Take(5)
+                                    .ToList();
+            }
+            else
+            {
+                listNotes = _context.notes
+                                     .Where(x => x.UserId == userID
+                                        && x.Alarm == true
+                                        && x.Anniversary.Day > DateTime.Now.Day
+                                        && x.Anniversary.Day <= DateTime.Now.Day + 7
+                                        && x.Anniversary.Month == DateTime.Now.Month)
+                                     .OrderByDescending(x => x.Anniversary)
+                                     .Take(5)
+                                     .ToList();
+            }
+
+            List<NoteDataResponse> listNoteDataResponses = new List<NoteDataResponse>();
+            foreach (Note note in listNotes)
+            {
+                if (_noteImageService.CheckExistImage(note.Id))
+                {
+                    var firstImage = Convert.ToBase64String(_noteImageService.GetFirstImage(note.Id));
+                    listNoteDataResponses.Add(new NoteDataResponse(note.Id, note.Title, note.Content, note.Anniversary, note.Hidden, firstImage));
+                }
+                else
+                {
+                    listNoteDataResponses.Add(new NoteDataResponse(note.Id, note.Title, note.Content, note.Anniversary, note.Hidden));
+                }
+
+            }
+
+            return listNoteDataResponses;
+        }
+
+        public List<NoteDataResponse> GetListNoteInMonth(int userID)
+        {
+            var listNotes = _context.notes
+                                    .Where(x => x.UserId == userID
+                                                && x.Alarm == true
+                                                && x.Anniversary.Day > DateTime.Now.Day
+                                                && x.Anniversary.Month == DateTime.Now.Month)
+                                    .OrderBy(x => x.Anniversary)
+                                    .Take(5)
+                                    .ToList();
+
+            List<NoteDataResponse> listNoteDataResponses = new List<NoteDataResponse>();
+            foreach (Note note in listNotes)
+            {
+                if (_noteImageService.CheckExistImage(note.Id))
+                {
+                    var firstImage = Convert.ToBase64String(_noteImageService.GetFirstImage(note.Id));
+                    listNoteDataResponses.Add(new NoteDataResponse(note.Id, note.Title, note.Content, note.Anniversary, note.Hidden, firstImage));
+                }
+                else
+                {
+                    listNoteDataResponses.Add(new NoteDataResponse(note.Id, note.Title, note.Content, note.Anniversary, note.Hidden));
+                }
+
+            }
+
+            return listNoteDataResponses;
+        }
 
         public bool CheckNoteByUser(int userId, int noteId)
         {
