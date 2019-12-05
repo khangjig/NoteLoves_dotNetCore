@@ -18,8 +18,11 @@ namespace Noteloves_server.Services
         List<NoteDataResponse> GetNoteOnThisDay(int userID);
         List<NoteDataResponse> GetListNoteByWeek(int userID);
         List<NoteDataResponse> GetListNoteInMonth(int userID);
-        int GetNewestNote(int UserID);
+        int GetNewestNote(int userID);
+        int GetUserIDByNoteID(int noteID);
+        int GetPartnerIDByNoteID(int noteID);
         bool CheckNoteByUser(int userId, int noteId);
+        bool CheckNoteByPartner(int partnerId, int noteId);
         bool CheckNoteExist(int noteId);
     }
 }

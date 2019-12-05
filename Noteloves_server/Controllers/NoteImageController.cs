@@ -32,10 +32,10 @@ namespace Noteloves_server.Controllers
             _jWTService = jWTService;
         }
 
-        // GET : api/note-image/list
+        // GET : api/noteimage/list
         [HttpGet]
         [Route("list")]
-        public IActionResult GetListNoteImage([FromForm] int noteId)
+        public IActionResult GetListNoteImageByToken([FromForm] int noteId)
         {
             var userId = GetIdByToken(this);
 
@@ -44,14 +44,14 @@ namespace Noteloves_server.Controllers
                 return NotFound(new Response("404", "User not found!"));
             }
 
-            if (!_noteService.CheckNoteByUser(userId, noteId) || !_noteService.CheckNoteExist(noteId))
+            if ( !_noteService.CheckNoteExist(noteId))
             {
                 return BadRequest(new Response("400", "The note does not exist!"));
             }
-
-            if(!_noteImageService.CheckExistImage(noteId))
+            
+            if (!_noteService.CheckNoteByUser(userId, noteId) && !_noteService.CheckNoteByPartner(userId, noteId))
             {
-                return BadRequest(new Response("400", "The note does not image!"));
+                return BadRequest(new Response("400", "You do not have this note!"));
             }
 
             return Ok(new DataResponse("200", _noteImageService.GetListImage(noteId), "Successfully!"));

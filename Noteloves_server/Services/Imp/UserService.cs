@@ -171,6 +171,7 @@ namespace Noteloves_server.Services
         {
             return _context.users.Find(userId).PartnerId;
         }
+
         public bool CheckSyncCode(int userId, string syncCode)
         {
             return _context.users.FirstOrDefault(x => x.Id == userId && x.SyncCode == syncCode) == null 

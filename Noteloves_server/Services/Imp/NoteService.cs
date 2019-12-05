@@ -326,7 +326,38 @@ namespace Noteloves_server.Services.Imp
 
         public bool CheckNoteByUser(int userId, int noteId)
         {
-            return _context.notes.Any(e => e.UserId == userId && e.Id ==noteId);
+            return _context.notes.Any(e => e.UserId == userId && e.Id == noteId);
+        }
+
+        public int GetUserIDByNoteID(int noteId)
+        {
+            return _context.notes.First(e => e.Id == noteId).UserId;
+        }
+
+        public int GetPartnerIDByNoteID(int noteID)
+        {
+            var value = _context.users.Join(_context.notes.Where(x => x.Id == noteID),
+                    user => user.Id, 
+                    note => note.UserId,
+                    (user, note) => new {
+                                user.PartnerId
+                            }).FirstOrDefault();
+
+            return value.PartnerId;
+        }
+
+        public bool CheckNoteByPartner(int partnerId, int noteId)
+        {
+            // var check = _context.notes.Any(e => e.Id == noteId && GetPartnerIDByNoteID(noteId) == partnerId) // Cach1
+
+            var check = _context.notes.Where(e => e.Id == noteId)
+                .Join(_context.users.Where(x => x.PartnerId == partnerId),
+                note => note.UserId, 
+                user => user.Id,
+                (user,note) => note
+                ).Any(); // Cach2
+
+            return check;
         }
 
         public int GetNewestNote(int UserID)

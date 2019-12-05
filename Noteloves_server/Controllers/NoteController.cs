@@ -72,13 +72,17 @@ namespace Noteloves_server.Controllers
                 return NotFound(new Response("404", "User not found!"));
             }
 
-            if (!_noteService.CheckNoteByUser(userId, id) || !_noteService.CheckNoteExist(id))
+            if (!_noteService.CheckNoteExist(id))
             {
                 return BadRequest(new Response("400", "The note does not exist!"));
             }
 
-            var note = _noteService.GetNoteById(id);
+            if(!_noteService.CheckNoteByUser(userId, id) && !_noteService.CheckNoteByPartner(userId, id))
+            {
+                    return BadRequest(new Response("400", "You can not read this note!"));
+            }
 
+            var note = _noteService.GetNoteById(id);
             return Ok(new DataResponse("200", new NoteDataResponse(note.Id, note.Title, note.Content, note.Anniversary, note.Hidden, note.UserId, null), "Successfully!"));
         }
 
