@@ -157,6 +157,12 @@ namespace Noteloves_server.Services
             var user = _context.users.First(a => a.Id == id);
             user.LoveDate = loveday;
 
+            if (user.PartnerId != 0)
+            {
+                var partner = _context.users.First(p => p.Id == user.PartnerId);
+                partner.LoveDate = loveday;
+            }
+
             _context.SaveChanges();
         }
 

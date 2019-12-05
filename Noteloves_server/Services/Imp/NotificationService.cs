@@ -41,6 +41,7 @@ namespace Noteloves_server.Services.Imp
 
             var partner = _context.users.First(x => x.Id == partnerID);
             partner.PartnerId = GetUserIDByNotificationID(notificationID);
+            partner.LoveDate = users.LoveDate;
 
             var noti = _context.notifications.First(x => x.Id == notificationID);
             noti.Status = false;
