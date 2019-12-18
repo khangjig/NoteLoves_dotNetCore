@@ -155,6 +155,11 @@ namespace Noteloves_server.Controllers
                 return NotFound(new Response("404", "User not found!"));
             }
 
+            if (loveDay > DateTime.Now)
+            {
+                return BadRequest(new Response("400", "The Date not invalid!"));
+            }
+
             _userService.UpdateLoveDay(id, loveDay);
 
             return Ok(new Response("200", "Successfully!"));

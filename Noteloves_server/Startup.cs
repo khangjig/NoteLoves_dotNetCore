@@ -70,7 +70,7 @@ namespace Noteloves_server
             services.AddScoped<INoteService, NoteService>();
             services.AddScoped<INoteImageService, NoteImageService>();
             services.AddScoped<INotificationService, NotificationService>();
-
+            services.AddScoped<IPartnerService, PartnerService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
