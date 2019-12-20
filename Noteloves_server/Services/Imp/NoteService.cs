@@ -112,12 +112,14 @@ namespace Noteloves_server.Services.Imp
                     .Where(x => x.UserId == userID
                             && x.Alarm == true
                             && x.Anniversary.Day == DateTime.Now.Day
-                            && x.Anniversary.Month == DateTime.Now.Month)
+                            && x.Anniversary.Month == DateTime.Now.Month
+                             && x.Anniversary.Year < DateTime.Now.Year)
                     .Union(_context.notes.Where(x => x.UserId == _userService.GetPartIDByUserID(userID)
                             && x.Alarm == true
                             && x.Hidden == false
                             && x.Anniversary.Day == DateTime.Now.Day
-                            && x.Anniversary.Month == DateTime.Now.Month))
+                            && x.Anniversary.Month == DateTime.Now.Month
+                             && x.Anniversary.Year < DateTime.Now.Year))
                     .OrderByDescending(x => x.Anniversary)
                     .Take(5)
                     .ToList();
@@ -128,7 +130,8 @@ namespace Noteloves_server.Services.Imp
                     .Where(x => x.UserId == userID
                             && x.Alarm == true
                             && x.Anniversary.Day == DateTime.Now.Day
-                            && x.Anniversary.Month == DateTime.Now.Month)
+                            && x.Anniversary.Month == DateTime.Now.Month
+                            && x.Anniversary.Year < DateTime.Now.Year)
                     .OrderByDescending(x => x.Anniversary)
                     .Take(5)
                     .ToList();
