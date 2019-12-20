@@ -84,7 +84,7 @@ namespace Noteloves_server.Controllers
         }
 
         //GET : api/notification/actived 
-        [HttpGet]
+        [HttpPost]
         [Route("actived")]
         public IActionResult SyncActive([FromForm] int notificationID )
         {
