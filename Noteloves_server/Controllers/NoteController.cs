@@ -63,7 +63,8 @@ namespace Noteloves_server.Controllers
 
         // GET : api/note
         [HttpGet]
-        public IActionResult GetNoteInfomationByToken([FromForm] int id)
+        [Route("getinfo")]
+        public IActionResult GetNoteInfomationByToken([FromQuery] int id)
         {
             var userId = GetIdByToken(this);
 

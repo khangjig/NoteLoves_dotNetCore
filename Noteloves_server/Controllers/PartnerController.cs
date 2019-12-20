@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -7,7 +8,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Noteloves_server.Data;
 using Noteloves_server.JWTProvider.Services;
-using Noteloves_server.Messages.Requests.Partner;
 using Noteloves_server.Messages.Responses;
 using Noteloves_server.Services;
 
@@ -31,9 +31,10 @@ namespace Noteloves_server.Controllers
             _jWTService = jWTService;
         }
 
-        // GET : api/partner
+        // GET : api/partner/name
         [HttpGet]
-        public IActionResult GetInfoPartner()
+        [Route("name")]
+        public IActionResult GetNamePartner()
         {
             var userId = GetIdByToken(this);
 
@@ -42,59 +43,13 @@ namespace Noteloves_server.Controllers
                 return NotFound(new Response("404", "User not found!"));
             }
 
-            return Ok("ADASD");
+            return Ok(new DataResponse("200", _partnerService.GetNamePartner(userId), "Successfully!"));
         }
 
-        // POST : api/partner
-        [HttpPost]
-        public IActionResult AddPartner([FromForm] AddInfoPartner addInfoPartner)
-        {
-            var userId = GetIdByToken(this);
-
-            if (!_userService.UserExistsById(userId))
-            {
-                return NotFound(new Response("404", "User not found!"));
-            }
-
-            return Ok("ADASD");
-        }
-
-        // PATCH : api/partner/changename
-        [HttpPatch]
-        [Route("changename")]
-        public async Task<IActionResult> ChangeNamePartner()
-        {
-            var userId = GetIdByToken(this);
-
-            if (!_userService.UserExistsById(userId))
-            {
-                return NotFound(new Response("404", "User not found!"));
-            }
-
-            await _context.SaveChangesAsync();
-
-            return Ok(new Response("200", "Successfully added!"));
-        }
-
-        // PATCH : api/partner/changebirthday
-        [HttpPatch]
-        [Route("changebirthday")]
-        public IActionResult ChangeBirthdayPartner()
-        {
-            var userId = GetIdByToken(this);
-
-            if (!_userService.UserExistsById(userId))
-            {
-                return NotFound(new Response("404", "User not found!"));
-            }
-
-            return Ok("ADASD");
-        }
-
-        // PATCH : api/partner/avatar
-        [HttpPatch]
+        // GET : api/partner/avatar
+        [HttpGet]
         [Route("avatar")]
-        public IActionResult ChangeAvatarPartner()
+        public IActionResult GetAvatarPartner()
         {
             var userId = GetIdByToken(this);
 
@@ -103,7 +58,42 @@ namespace Noteloves_server.Controllers
                 return NotFound(new Response("404", "User not found!"));
             }
 
-            return Ok("ADASD");
+            return Ok(new DataResponse("200", Convert.ToBase64String(_partnerService.GetAvatarPartner(userId)), "Successfully!"));
+        }
+
+
+        // POST : api/partner/change-name
+        [HttpPatch]
+        [Route("change-name")]
+        public IActionResult ChangeBirthdayPartner([FromForm] string name)
+        {
+            var userId = GetIdByToken(this);
+
+            if (!_userService.UserExistsById(userId))
+            {
+                return NotFound(new Response("404", "User not found!"));
+            }
+
+            _partnerService.ChangeNamePartner(userId, name);
+
+            return Ok(new Response("200", "Successfully Updated!"));
+        }
+
+        // POST : api/partner/avatar
+        [HttpPost]
+        [Route("change-avatar")]
+        public IActionResult ChangeAvatarPartner(IFormFile avatar)
+        {
+            var userId = GetIdByToken(this);
+
+            if (!_userService.UserExistsById(userId))
+            {
+                return NotFound(new Response("404", "User not found!"));
+            }
+
+            _partnerService.ChangeAvatarPartner(userId, avatar);
+
+            return Ok(new Response("200", "Successfully Updated!"));
         }
 
         private int GetIdByToken(PartnerController partnerController)

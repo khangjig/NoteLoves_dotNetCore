@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Noteloves_server.Services.Imp
@@ -13,10 +14,12 @@ namespace Noteloves_server.Services.Imp
     public class PartnerService : IPartnerService
     {
         private readonly DatabaseContext _context;
+        private IUserService _userService;
 
-        public PartnerService(DatabaseContext context)
+        public PartnerService(DatabaseContext context, IUserService userService)
         {
             _context = context;
+            _userService = userService;
         }
 
         public Partner GetPartner(int userID)
@@ -24,15 +27,40 @@ namespace Noteloves_server.Services.Imp
             return _context.partner.FirstOrDefault(x => x.UserId == userID);
         }
 
-        public void AddInfoPartner(AddInfoPartner addInfoPartner)
+       public void AddNew(int userID)
         {
             Partner newPartner = new Partner();
 
-            newPartner.Name = addInfoPartner.NameParter;
-            newPartner.Birthday = addInfoPartner.BirthDayPartner;
-            newPartner.Avatar = EncodeImage(addInfoPartner.AvatarPartner);
+            newPartner.UserId = userID;
+            newPartner.Name = "Partner Name";
+            newPartner.Birthday = DateTime.Now;
+            newPartner.Avatar = Encoding.UTF8.GetBytes("");
 
             _context.partner.Add(newPartner);
+        }
+
+        public string GetNamePartner(int userID)
+        {
+            if (_userService.CheckSync(userID))
+            {
+                return _context.users.First(x => x.PartnerId == userID).Name;
+            }
+            else
+            {
+                return _context.partner.FirstOrDefault(x => x.UserId == userID).Name;
+            }
+        }
+
+        public byte[] GetAvatarPartner(int userID)
+        {
+            if (_userService.CheckSync(userID))
+            {
+                return _context.avatars.First(x => x.UserId == _userService.GetPartIDByUserID(userID)).Image;
+            }
+            else
+            {
+                return _context.partner.First(x => x.UserId == userID).Avatar;
+            }
         }
 
         public void ChangeNamePartner(int userID, string Name)
@@ -42,18 +70,11 @@ namespace Noteloves_server.Services.Imp
 
             _context.SaveChanges();
         }
-        public void ChangeBirthDayPartner(int userID, DateTime birthday)
+
+        public void ChangeAvatarPartner(int userID, IFormFile image)
         {
             var partner = _context.partner.First(x => x.UserId == userID);
-            partner.Birthday  = birthday;
-
-            _context.SaveChanges();
-        }
-
-        public void ChangeAvatarPartner(int userID, byte[] AvatarBase64)
-        {
-            var partner = _context.partner.First(x => x.UserId == userID);
-            partner.Avatar = AvatarBase64;
+            partner.Avatar = EncodeImage(image);
 
             _context.SaveChanges();
         }

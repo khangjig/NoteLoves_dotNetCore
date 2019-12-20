@@ -35,7 +35,7 @@ namespace Noteloves_server.Controllers
         // GET : api/noteimage/list
         [HttpGet]
         [Route("list")]
-        public IActionResult GetListNoteImageByToken([FromForm] int noteId)
+        public IActionResult GetListNoteImageByToken([FromQuery] int noteId)
         {
             var userId = GetIdByToken(this);
 

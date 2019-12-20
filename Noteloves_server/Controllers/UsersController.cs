@@ -24,12 +24,15 @@ namespace Noteloves_server.Controllers
     {
         private readonly DatabaseContext _context;
         private IUserService _userService;
+        private IPartnerService _partnerService;
         private IJWTService _jWTService;
 
-        public UsersController(DatabaseContext context, IUserService userService, IJWTService jWTService)
+
+        public UsersController(DatabaseContext context, IUserService userService, IPartnerService partnerService, IJWTService jWTService)
         {
             _context = context;
             _userService = userService;
+            _partnerService = partnerService;
             _jWTService = jWTService;
         }
 
@@ -210,7 +213,11 @@ namespace Noteloves_server.Controllers
             _userService.AddUser(addUserForm);
             await _context.SaveChangesAsync();
 
-            _userService.UpdateSyncCode(_userService.GetIdByEmail(addUserForm.Email));
+            var userID = _userService.GetIdByEmail(addUserForm.Email);
+            _userService.UpdateSyncCode(userID);
+            await _context.SaveChangesAsync();
+
+            _partnerService.AddNew(userID);
             await _context.SaveChangesAsync();
 
             return Ok(new Response("200", "Successfully added!"));
