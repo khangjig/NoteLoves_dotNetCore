@@ -15,6 +15,7 @@ namespace Noteloves_server.Services
         void ChangePassword(int id, string newPassword);
         void EidtInfomation(int id, EditUserForm editUserForm);
         User GetInfomation(int id);
+        string GetUsername(int id);
         void UpdateRefreshToken(int id, string refreshToken);
         int GetIdByEmail(string email);
         string GetRefreshToken(string email);

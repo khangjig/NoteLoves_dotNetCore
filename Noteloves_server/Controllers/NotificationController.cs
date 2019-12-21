@@ -83,7 +83,7 @@ namespace Noteloves_server.Controllers
             return Ok(new DataResponse("200", _notificationService.GetNotification(userId), "Successfully!"));
         }
 
-        //GET : api/notification/actived 
+        //POST : api/notification/actived 
         [HttpPost]
         [Route("actived")]
         public IActionResult SyncActive([FromForm] int notificationID )
@@ -103,6 +103,28 @@ namespace Noteloves_server.Controllers
             }
 
             _notificationService.SyncActived(partnerId, notificationID);
+
+            return Ok(new Response("200", "Successfully!"));
+        }
+
+        //POST : api/notification/deny 
+        [HttpPost]
+        [Route("deny")]
+        public IActionResult SyncDeny([FromForm] int notificationID)
+        {
+            var partnerId = GetIdByToken(this);
+
+            if (!_userService.UserExistsById(partnerId))
+            {
+                return NotFound(new Response("404", "User not exist!"));
+            }
+
+            if (!_notificationService.CheckNotification(partnerId, notificationID))
+            {
+                return BadRequest(new Response("400", "The Notification not exist!"));
+            }
+
+            _notificationService.SyncDeny(partnerId, notificationID);
 
             return Ok(new Response("200", "Successfully!"));
         }

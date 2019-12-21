@@ -42,6 +42,11 @@ namespace Noteloves_server.Services
             return _context.users.Find(id);
         }
 
+        public string GetUsername(int id)
+        {
+            return _context.users.First(x => x.Id == id).Name;
+        }
+
         public void EidtInfomation(int id, EditUserForm editUserForm)
         {
             var user = _context.users.First(a => a.Id == id);

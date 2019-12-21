@@ -11,6 +11,7 @@ namespace Noteloves_server.Services
         void CreatedNotification(int userID, int partnerId);
         List<Notification> GetNotification(int userID);
         void SyncActived(int partnerID, int notificationID);
+        void SyncDeny(int partnerID, int notificationID);
         bool CheckNotification(int partnerID, int notificationID);
         int GetUserIDByNotificationID(int notificationID);
         int GetPartnerIDByNotificationID(int notificationID);
