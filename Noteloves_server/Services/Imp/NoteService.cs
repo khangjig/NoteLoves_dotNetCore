@@ -120,7 +120,7 @@ namespace Noteloves_server.Services.Imp
                             && x.Anniversary.Day == DateTime.Now.Day
                             && x.Anniversary.Month == DateTime.Now.Month
                              && x.Anniversary.Year < DateTime.Now.Year))
-                    .OrderByDescending(x => x.Anniversary)
+                    .OrderBy(x => x.Anniversary)
                     .Take(5)
                     .ToList();
             }
@@ -132,7 +132,7 @@ namespace Noteloves_server.Services.Imp
                             && x.Anniversary.Day == DateTime.Now.Day
                             && x.Anniversary.Month == DateTime.Now.Month
                             && x.Anniversary.Year < DateTime.Now.Year)
-                    .OrderByDescending(x => x.Anniversary)
+                    .OrderBy(x => x.Anniversary)
                     .Take(5)
                     .ToList();
             }
@@ -242,7 +242,7 @@ namespace Noteloves_server.Services.Imp
                                 && x.Anniversary.Day > DateTime.Now.Day
                                 && x.Anniversary.Day <= DateTime.Now.Day + 7
                                 && x.Anniversary.Month == DateTime.Now.Month))
-                        .OrderByDescending(x => x.Anniversary)
+                        .OrderBy(x => x.Anniversary)
                         .Take(5)
                         .ToList();
                 }
@@ -254,7 +254,7 @@ namespace Noteloves_server.Services.Imp
                                 && x.Anniversary.Day > DateTime.Now.Day
                                 && x.Anniversary.Day <= DateTime.Now.Day + 7
                                 && x.Anniversary.Month == DateTime.Now.Month)
-                        .OrderByDescending(x => x.Anniversary)
+                        .OrderBy(x => x.Anniversary)
                         .Take(5)
                         .ToList();
                 }
