@@ -61,6 +61,22 @@ namespace Noteloves_server.Services.Imp
             _context.SaveChanges();
         }
 
+        public void CancelSync(int userID, int partnerID)
+        {
+            var users = _context.users.First(x => x.Id == userID);
+            users.PartnerId = 0;
+
+            var partner = _context.users.First(x => x.Id == partnerID);
+            partner.PartnerId = 0;
+
+            _context.SaveChanges();
+        }
+
+        public bool CheckSyncCouple(int userID, int partnerID)
+        {
+            return _context.users.Any(x => x.Id == userID && x.PartnerId == partnerID);
+        }
+
         public bool CheckNotification(int partnerID, int notificationID)
         {
             var num = _context.notifications.Where(x => x.PartnerId == partnerID && x.Id == notificationID && x.Status == true).Count();

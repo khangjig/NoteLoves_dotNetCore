@@ -85,11 +85,6 @@ namespace Noteloves_server.Controllers
                 return NotFound(new Response("404", "User not exist!"));
             }
 
-            //if (_userService.CheckSync(userId))
-            //{
-            //    return Ok(new DataResponse("200", "", "Successfully!"));
-            //}
-
             return Ok(new DataResponse("200", _notificationService.GetNotification(userId), "Successfully!"));
         }
 
@@ -135,6 +130,33 @@ namespace Noteloves_server.Controllers
             }
 
             _notificationService.SyncDeny(partnerId, notificationID);
+
+            return Ok(new Response("200", "Successfully!"));
+        }
+
+        //POST : api/notification/cancelSync 
+        [HttpPost]
+        [Route("cancelSync")]
+        public IActionResult CancelSync([FromForm] int partnerID)
+        {
+            var userID = GetIdByToken(this);
+
+            if (!_userService.UserExistsById(userID))
+            {
+                return NotFound(new Response("404", "User not exist!"));
+            }
+
+            if (!_userService.UserExistsById(partnerID))
+            {
+                return NotFound(new Response("404", "Partner not exist!"));
+            }
+
+            if (!_notificationService.CheckSyncCouple(userID,partnerID))
+            {
+                return NotFound(new Response("404", "You and his/her not sync!"));
+            }
+
+            _notificationService.CancelSync(userID, partnerID);
 
             return Ok(new Response("200", "Successfully!"));
         }
