@@ -80,6 +80,16 @@ namespace Noteloves_server.Controllers
                 return NotFound(new Response("404", "User not exist!"));
             }
 
+            if (!_userService.UserExistsById(userId))
+            {
+                return NotFound(new Response("404", "User not exist!"));
+            }
+
+            //if (_userService.CheckSync(userId))
+            //{
+            //    return Ok(new DataResponse("200", "", "Successfully!"));
+            //}
+
             return Ok(new DataResponse("200", _notificationService.GetNotification(userId), "Successfully!"));
         }
 

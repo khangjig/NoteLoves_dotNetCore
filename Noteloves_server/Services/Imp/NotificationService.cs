@@ -32,8 +32,10 @@ namespace Noteloves_server.Services.Imp
 
         public List<Notification> GetNotification(int userID)
         {
-            var notifi = _context.notifications.Where(x => x.PartnerId == userID && x.Status == true).ToList();
-            return notifi;
+            var notifi = _context.notifications.Where(x => x.PartnerId == userID && x.Status == true);
+            if (_userService.CheckSync(userID))
+                return notifi.Take(0).ToList();
+            return notifi.ToList();
         }
 
         public void SyncActived(int partnerID, int notificationID)
@@ -50,6 +52,7 @@ namespace Noteloves_server.Services.Imp
 
             _context.SaveChanges();
         }
+
         public void SyncDeny(int partnerID, int notificationID)
         {
             var noti = _context.notifications.First(x => x.Id == notificationID);
